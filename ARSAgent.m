@@ -93,9 +93,9 @@ classdef ARSAgent < handle
                 end
                 
                 % Collect Rollouts ---------------------------------------
-                parfor i = 1:nDelta*2
-                    W = candidateLinWeights(:,i); 
-                    mu = candidateBias(:,i);
+                for i = 1:nDelta*2
+                    W = candidateLinWeights(:,:,i); 
+                    mu = candidateBias(:,:,i);
                     policy = @(x)(W'*((x - mu)./state_stds));
                     [R,X] = doArsRollout(policy,env,maxEnvSteps); 
                     Rs(i) = R;
@@ -148,7 +148,7 @@ classdef ARSAgent < handle
 
                 if verbose && mod(epoch, obj.logInterval) == 0
                     fprintf("iteration %d, FPS: %f \n", epoch, sum(rolloutTs)/toc(begin));
-                    fprintf("max return: %f, mean return: %f \n\n", max(rewardsMax), mean(rewardsMax));
+                    fprintf("max return: %f, min return %f,  mean return: %f \n\n", max(rewardsMax), min(rewardsMax), mean(rewardsMax));
                 end
 
 

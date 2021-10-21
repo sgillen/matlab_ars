@@ -13,16 +13,18 @@ x = env.reset();
 X = zeros(maxEnvSteps, size(x,1));
 R = 0;
 
+Rtmp = [];
+
 for step = 1:maxEnvSteps
    a = policy(x);
    [x,r,isDone,~] = env.step(a);
    X(step,:) = x;
    R = R + r;
-   if isDone
-       X = X(1:step, :);
-       break
-   end
+   Rtmp = [Rtmp, r];
+%    if isDone
+%        X = X(1:step, :);
+%        break
+%    end
 end
-
 
 end
