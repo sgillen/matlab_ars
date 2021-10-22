@@ -93,7 +93,7 @@ classdef ARSAgent < handle
                 end
                 
                 % Collect Rollouts ---------------------------------------
-                for i = 1:nDelta*2
+                parfor i = 1:nDelta*2
                     W = candidateLinWeights(:,:,i); 
                     mu = candidateBias(:,:,i);
                     policy = @(x)(W'*((x - mu)./state_stds));
