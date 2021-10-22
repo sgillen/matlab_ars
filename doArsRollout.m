@@ -21,10 +21,10 @@ for step = 1:maxEnvSteps
    X(step,:) = x;
    R = R + r;
    Rtmp = [Rtmp, r];
-%    if isDone
-%        X = X(1:step, :);
-%        break
-%    end
+   if isDone
+       X = X(1:step, :);
+       break
+   end
 end
 
 end
