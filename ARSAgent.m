@@ -86,7 +86,7 @@ classdef ARSAgent < handle
                 
                 if useBias
                     candidateLinWeights = candidateWeights(:,1:end-1,:);
-                    candidateBias = candidateWeights(:,end,:).squeeze();
+                    candidateBias = squeeze(candidateWeights(:,end,:));
                 else
                     candidateLinWeights = candidateWeights;
                     candidateBias = repmat(state_means, 1, nDelta*2);
