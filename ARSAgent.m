@@ -8,6 +8,7 @@ classdef ARSAgent < handle
         maxStepsPerEpisode(1,1)
         useBias(1,1) logical
         logInterval(1,1) int64 = 10;
+        rewardShift(1,1) double
         
         weights
         policy
@@ -28,6 +29,7 @@ classdef ARSAgent < handle
                 optionalArgs.useBias(1,1) logical = false
                 optionalArgs.maxStepsPerEpisode(1,1) int64 {mustBePositive} = 1000
                 optionalArgs.logInterval(1,1) int64 {mustBePositive} = 10;
+                optionalArgs.rewardShift = 0;
             end 
             obj.env = env;
             obj.stepSize = stepSize;
@@ -36,6 +38,7 @@ classdef ARSAgent < handle
             obj.nTop = nTop;
             obj.maxStepsPerEpisode = optionalArgs.maxStepsPerEpisode;
             obj.useBias = optionalArgs.useBias;
+            obj.rewardShift = optionalArgs.rewardShift;
             
             
             obj.weights = zeros(env.getObservationInfo.Dimension(1), env.getActionInfo.Dimension(1) + obj.useBias);
@@ -63,6 +66,7 @@ classdef ARSAgent < handle
            useBias = obj.useBias;
            state_means = obj.state_means;
            state_stds = obj.state_stds;
+           rewardShift = obj.rewardShift;
            maxEnvSteps = obj.maxStepsPerEpisode;
            
            rewards = zeros(nEpochs,1);
@@ -98,7 +102,7 @@ classdef ARSAgent < handle
                     mu = candidateBias(:,i);
                     policy = @(x)(W'*((x - mu)./state_stds));
                     [R,X] = doArsRollout(policy,env,maxEnvSteps); 
-                    Rs(i) = R;
+                    Rs(i) = R+rewardShift*size(X,1);
                     Xstds(:,i) = std(X,0,1);
                     Xmus(:,i) = mean(X,1);
                     rolloutTs(i) = size(X,1);
